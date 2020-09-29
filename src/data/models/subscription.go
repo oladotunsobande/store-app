@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -17,10 +16,10 @@ type Subscription struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (subscription *Subscription) BeforeCreate(tx *gorm.DB) error {
+/*func (subscription *Subscription) BeforeCreate(tx *gorm.DB) error {
 	subscription.UID = uuid.New().String()
 	return nil
-}
+}*/
 
 // SubscriptionSchema Get subscription schema interface
 func SubscriptionSchema() *Subscription {

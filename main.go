@@ -1,37 +1,22 @@
 package main
 
 import (
-	database "store-app/src/data"
-	"store-app/src/data/models"
+	"log"
+	"store-app/src/services"
 )
 
 func main() {
-	db := database.ConnectSQL()
+	subscription := services.SubscriptionPayloadType{
+		Name:     "Premium",
+		Price:    20000.00,
+		Duration: 365,
+		IsTrial:  false,
+	}
 
-	var result *models.Business
-	db.Raw("SELECT * FROM businesses").Scan(&result)
-	/*rows, err := db.Query("SELECT * FROM authors")
+	result, err := subscription.CreateNewSubscription()
 	if err != nil {
-		log.Fatal("Error while retrieving rows")
+		log.Fatal(err)
 	}
 
-	defer rows.Close()
-
-	for rows.Next() {
-		var (
-			id        int
-			firstName string
-			lastName  string
-			created   string
-		)
-
-		err := rows.Scan(&id, &firstName, &lastName, &created)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		log.Printf("id: %d, first name: %s, last name: %s, created at: %s\n", id, firstName, lastName, created)
-	}
-
-	defer db.Close()*/
+	log.Println("New Subscription: ", result)
 }
