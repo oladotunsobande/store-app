@@ -21,17 +21,17 @@ type Collection struct {
 	AvailableStock uint32    `gorm:"type:int;not null" binding:"required" json:"available_stock"`
 	LockedStock    uint32    `gorm:"type:int;default:0" binding:"required" json:"locked_stock"`
 	Status         string    `gorm:"type:enum('available','unavailable','exhausted');not null;default:'available'" binding:"required" json:"status"`
-	CategoryUID    string    `binding:"required" json:"category_uid"`
-	BusinessUID    string    `binding:"required" json:"business_uid"`
+	CategoryUID    string    `gorm:"not null" binding:"required" json:"category_uid"`
+	BusinessUID    string    `gorm:"not null" binding:"required" json:"business_uid"`
 }
 
 // BeforeCreate Hook for generating UUID
-func (collection *Collection) BeforeCreate(tx *gorm.DB) {
+func (collection *Collection) BeforeCreate(tx *gorm.DB) error {
 	collection.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateCollectionSchema Create table and relationships (if any)
-func MigrateCollectionSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Collection{})
-	return db
+// CollectionSchema Get collection schema interface
+func CollectionSchema() *Collection {
+	return &Collection{}
 }

@@ -15,12 +15,12 @@ type Category struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (category *Category) BeforeCreate(tx *gorm.DB) {
+func (category *Category) BeforeCreate(tx *gorm.DB) error {
 	category.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateCategorySchema Create table and relationships (if any)
-func MigrateCategorySchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Category{})
-	return db
+// CategorySchema Get category schema interface
+func CategorySchema() *Category {
+	return &Category{}
 }

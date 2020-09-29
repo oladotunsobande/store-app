@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"log"
 	"time"
 
@@ -10,31 +9,29 @@ import (
 	"gorm.io/gorm"
 
 	secrets "store-app/src/config"
+	"store-app/src/data/models"
 )
 
-// Connect Connect to SQL database
-func Connect() (db *sql.DB) {
-	db, err := sql.Open(secrets.GetSecrets().DatabaseProvider, secrets.GetSecrets().DatabaseURL)
-	if err != nil {
-		log.Fatal(err)
-	}
+// GetSchemas Return slice of all table schema interfaces
+func GetSchemas() []interface{} {
+	var schemas []interface{}
 
-	// Set connection pool options
-	db.SetMaxIdleConns(10)
-	db.SetMaxOpenConns(100)
-	db.SetConnMaxLifetime(time.Hour)
+	schemas = append(schemas, models.SubscriptionSchema())
+	schemas = append(schemas, models.BusinessSchema())
+	schemas = append(schemas, models.CategorySchema())
+	schemas = append(schemas, models.VendorSchema())
+	schemas = append(schemas, models.ProductSchema())
+	schemas = append(schemas, models.CollectionSchema())
+	schemas = append(schemas, models.TransactionSchema())
+	schemas = append(schemas, models.PersonnelSchema())
+	schemas = append(schemas, models.CustomerSchema())
+	schemas = append(schemas, models.OrderSchema())
+	schemas = append(schemas, models.OrderProductSchema())
+	schemas = append(schemas, models.OrderCollectionSchema())
+	schemas = append(schemas, models.PaymentSchema())
+	schemas = append(schemas, models.ParameterSchema())
 
-	ctx, cancel := context.WithTimeout(context.TODO(), 1*time.Second)
-	defer cancel()
-
-	if err := db.PingContext(ctx); err != nil {
-		log.Println("Failed to establish database connection")
-		panic(err.Error())
-	} else {
-		log.Println("Database connected!")
-	}
-
-	return db
+	return schemas
 }
 
 // ConnectSQL Connect to MySQL database
@@ -46,7 +43,9 @@ func ConnectSQL() *gorm.DB {
 		DontSupportRenameIndex:    true,
 		DontSupportRenameColumn:   true,
 		SkipInitializeWithVersion: false,
-	}), &gorm.Config{})
+	}), &gorm.Config{
+		SkipDefaultTransaction: true,
+	})
 
 	if err != nil {
 		log.Fatal(err)
@@ -67,6 +66,9 @@ func ConnectSQL() *gorm.DB {
 		panic(err.Error())
 	} else {
 		log.Println("[MySQL] - Database connected!")
+
+		// Migrate all table schemas and relationships
+		db.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(GetSchemas()...)
 	}
 
 	return db

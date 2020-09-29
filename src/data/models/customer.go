@@ -17,12 +17,12 @@ type Customer struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (customer *Customer) BeforeCreate(tx *gorm.DB) {
+func (customer *Customer) BeforeCreate(tx *gorm.DB) error {
 	customer.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateCustomerSchema Create table and relationships (if any)
-func MigrateCustomerSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Customer{})
-	return db
+// CustomerSchema Get customer schema interface
+func CustomerSchema() *Customer {
+	return &Customer{}
 }

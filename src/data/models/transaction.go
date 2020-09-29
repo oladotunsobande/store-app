@@ -13,16 +13,16 @@ type Transaction struct {
 	Reference   string  `gorm:"type:varchar(45);not null;index" binding:"required" json:"reference"`
 	Narration   string  `gorm:"type:varchar(75);not null" binding:"required" json:"narration"`
 	Amount      float64 `gorm:"type:decimal(15,2);not null" binding:"required" json:"amount"`
-	BusinessUID string  `binding:"required" json:"business_uid"`
+	BusinessUID string  `gorm:"not null" binding:"required" json:"business_uid"`
 }
 
 // BeforeCreate Hook for generating UUID
-func (transaction *Transaction) BeforeCreate(tx *gorm.DB) {
+func (transaction *Transaction) BeforeCreate(tx *gorm.DB) error {
 	transaction.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateTransactionSchema Create table and relationships (if any)
-func MigrateTransactionSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Transaction{})
-	return db
+// TransactionSchema Get transaction schema interface
+func TransactionSchema() *Transaction {
+	return &Transaction{}
 }

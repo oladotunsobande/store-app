@@ -21,17 +21,17 @@ type Personnel struct {
 	LastLogin      time.Time `json:"last_login,omitempty"`
 	HasAutoSecret  uint8     `gorm:"type:tinyint;not null;default:0" json:"has_auto_secret"`
 	Status         string    `gorm:"type:enum('active','inactive');not null;default:'active'" json:"status"`
-	BusinessUID    string    `binding:"required" json:"business_uid"`
+	BusinessUID    string    `gorm:"not null" binding:"required" json:"business_uid"`
 	Order          []Order   `gorm:"foreignKey:PersonnelUID;references:UID" json:"orders"`
 }
 
 // BeforeCreate Hook for generating UUID
-func (personnel *Personnel) BeforeCreate(tx *gorm.DB) {
+func (personnel *Personnel) BeforeCreate(tx *gorm.DB) error {
 	personnel.UID = uuid.New().String()
+	return nil
 }
 
-// MigratePersonnelSchema Create table and relationships (if any)
-func MigratePersonnelSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Personnel{})
-	return db
+// PersonnelSchema Get personnel schema interface
+func PersonnelSchema() *Personnel {
+	return &Personnel{}
 }

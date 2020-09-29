@@ -15,12 +15,12 @@ type Parameter struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (parameter *Parameter) BeforeCreate(tx *gorm.DB) {
+func (parameter *Parameter) BeforeCreate(tx *gorm.DB) error {
 	parameter.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateParameterSchema Create table and relationships (if any)
-func MigrateParameterSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Parameter{})
-	return db
+// ParameterSchema Get parameter schema interface
+func ParameterSchema() *Parameter {
+	return &Parameter{}
 }

@@ -16,16 +16,16 @@ type Vendor struct {
 	Email       string `gorm:"type:varchar(55);not null;index" binding:"required" json:"email"`
 	PhoneNumber string `gorm:"type:varchar(20);not null;index" binding:"required" json:"phone_number"`
 	Status      string `gorm:"type:enum('active','inactive');not null" binding:"required" json:"status"`
-	BusinessUID string `binding:"required" json:"business_uid"`
+	BusinessUID string `gorm:"not null" binding:"required" json:"business_uid"`
 }
 
 // BeforeCreate Hook for generating UUID
-func (vendor *Vendor) BeforeCreate(tx *gorm.DB) {
+func (vendor *Vendor) BeforeCreate(tx *gorm.DB) error {
 	vendor.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateVendorSchema Create table and relationships (if any)
-func MigrateVendorSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Vendor{})
-	return db
+// VendorSchema Get vendor schema interface
+func VendorSchema() *Vendor {
+	return &Vendor{}
 }

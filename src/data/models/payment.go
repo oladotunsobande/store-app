@@ -12,16 +12,16 @@ type Payment struct {
 	InvoiceNumber string `gorm:"type:varchar(20);not null;index" binding:"required" json:"invoice_number"`
 	Medium        string `gorm:"type:enum('cash','debit-card','bank-transfer','other');not null" binding:"required" json:"medium"`
 	Status        string `gorm:"type:enum('pending','completed');not null" binding:"required" json:"status"`
-	OrderUID      string `binding:"required" json:"order_uid"`
+	OrderUID      string `gorm:"not null" binding:"required" json:"order_uid"`
 }
 
 // BeforeCreate Hook for generating UUID
-func (payment *Payment) BeforeCreate(tx *gorm.DB) {
+func (payment *Payment) BeforeCreate(scope *gorm.DB) error {
 	payment.UID = uuid.New().String()
+	return nil
 }
 
-// MigratePaymentSchema Create table and relationships (if any)
-func MigratePaymentSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Payment{})
-	return db
+// PaymentSchema Get payment schema interface
+func PaymentSchema() *Payment {
+	return &Payment{}
 }

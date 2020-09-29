@@ -1,14 +1,16 @@
 package main
 
 import (
-	"log"
 	database "store-app/src/data"
+	"store-app/src/data/models"
 )
 
 func main() {
-	db := database.Connect()
+	db := database.ConnectSQL()
 
-	rows, err := db.Query("SELECT * FROM authors")
+	var result *models.Business
+	db.Raw("SELECT * FROM businesses").Scan(&result)
+	/*rows, err := db.Query("SELECT * FROM authors")
 	if err != nil {
 		log.Fatal("Error while retrieving rows")
 	}
@@ -31,5 +33,5 @@ func main() {
 		log.Printf("id: %d, first name: %s, last name: %s, created at: %s\n", id, firstName, lastName, created)
 	}
 
-	defer db.Close()
+	defer db.Close()*/
 }

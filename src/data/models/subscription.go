@@ -17,12 +17,12 @@ type Subscription struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (subscription *Subscription) BeforeCreate(tx *gorm.DB) {
+func (subscription *Subscription) BeforeCreate(tx *gorm.DB) error {
 	subscription.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateSubscriptionSchema Create table and relationships (if any)
-func MigrateSubscriptionSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Subscription{})
-	return db
+// SubscriptionSchema Get subscription schema interface
+func SubscriptionSchema() *Subscription {
+	return &Subscription{}
 }

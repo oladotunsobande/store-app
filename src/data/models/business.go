@@ -16,7 +16,7 @@ type Business struct {
 	Country            string        `gorm:"type:varchar(30);not null" binding:"required" json:"country"`
 	SubscriptionExpiry time.Time     `gorm:"type:datetime;not null" binding:"required" json:"subscription_expiry"`
 	Status             string        `gorm:"type:enum('active','inactive');not null" binding:"required" json:"status"`
-	SubscriptionUID    string        `binding:"required" json:"subscription_uid"`
+	SubscriptionUID    string        `gorm:"not null" binding:"required" json:"subscription_uid"`
 	Products           []Product     `gorm:"foreignKey:BusinessUID;references:UID" json:"products"`
 	Collections        []Collection  `gorm:"foreignKey:BusinessUID;references:UID" json:"collections"`
 	Vendors            []Vendor      `gorm:"foreignKey:BusinessUID;references:UID" json:"vendors"`
@@ -25,12 +25,12 @@ type Business struct {
 }
 
 // BeforeCreate Hook for generating UUID
-func (business *Business) BeforeCreate(tx *gorm.DB) {
+func (business *Business) BeforeCreate(tx *gorm.DB) error {
 	business.UID = uuid.New().String()
+	return nil
 }
 
-// MigrateBusinessSchema Create table and relationships (if any)
-func MigrateBusinessSchema(db *gorm.DB) *gorm.DB {
-	db.AutoMigrate(&Business{})
-	return db
+// BusinessSchema Get business schema interface
+func BusinessSchema() *Business {
+	return &Business{}
 }
