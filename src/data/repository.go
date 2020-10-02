@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"log"
 
 	"gorm.io/gorm"
@@ -10,7 +11,7 @@ var connection *gorm.DB
 
 // RepositoryConstruct Struct definition for data input
 type RepositoryConstruct struct {
-	Schema     interface{}
+	Model      interface{}
 	Payload    interface{}
 	Clause     string
 	Parameters interface{}
@@ -21,17 +22,33 @@ func init() {
 	connection = ConnectSQL()
 }
 
+// StructToJSON converts struct to JSON
+func StructToJSON(data interface{}) ([]byte, error) {
+	jsonObject, err := json.Marshal(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonObject, nil
+}
+
 // GetOne Repository to retrieve a single row
 func (_repositoryConstruct RepositoryConstruct) GetOne() (interface{}, error) {
-	result := connection.Where(_repositoryConstruct.Clause, _repositoryConstruct.Parameters).First(_repositoryConstruct.Schema)
+	record := map[string]interface{}{}
 
+	result := connection.Model(_repositoryConstruct.Model).Where(_repositoryConstruct.Clause, _repositoryConstruct.Parameters).First(record)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
-	log.Println("GetOne - Result: ", result)
+	response, err := StructToJSON(record)
+	if err != nil {
+		return nil, err
+	}
 
-	return result, nil
+	log.Println("GetOne - Result: ", string(response))
+
+	return response, nil
 }
 
 // AddOne Repository function to add a single row to table
@@ -42,7 +59,7 @@ func (_repositoryConstruct RepositoryConstruct) AddOne() (interface{}, error) {
 		return nil, result.Error
 	}
 
-	log.Println("AddOne - Result: ", result)
+	log.Println("Rows: ", result.RowsAffected)
 
 	return result, nil
 }

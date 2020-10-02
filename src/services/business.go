@@ -3,7 +3,6 @@ package services
 import (
 	"errors"
 	database "store-app/src/data"
-	"store-app/src/data/models"
 )
 
 // CreateNewBusiness Add new business account
@@ -21,7 +20,7 @@ func (_payload BusinessPayloadType) CreateNewBusiness() (interface{}, error) {
 		return nil, errors.New("Subscription record does not exist")
 	}
 
-	data := &models.Business{
+	data := &database.Business{
 		Name:            _payload.Name,
 		Province:        _payload.Province,
 		Country:         _payload.Country,

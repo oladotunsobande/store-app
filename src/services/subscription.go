@@ -2,7 +2,6 @@ package services
 
 import (
 	database "store-app/src/data"
-	"store-app/src/data/models"
 
 	"github.com/google/uuid"
 )
@@ -15,7 +14,7 @@ func (_payload SubscriptionPayloadType) CreateNewSubscription() (interface{}, er
 		isTrial = 1
 	}
 
-	newSubscription := &models.Subscription{
+	newSubscription := &database.Subscription{
 		UID:      uuid.New().String(),
 		Name:     _payload.Name,
 		Price:    _payload.Price,
@@ -37,10 +36,8 @@ func (_payload SubscriptionPayloadType) CreateNewSubscription() (interface{}, er
 
 // GetSingleSubscription Get single subscription record
 func (_payload SubscriptionPayloadType) GetSingleSubscription() (interface{}, error) {
-	var schema models.Subscription
-
 	Construct := database.RepositoryConstruct{
-		Schema:     schema,
+		Model:      &database.Subscription{},
 		Clause:     "uid = ?",
 		Parameters: _payload.UID,
 	}

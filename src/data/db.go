@@ -9,27 +9,26 @@ import (
 	"gorm.io/gorm"
 
 	secrets "store-app/src/config"
-	"store-app/src/data/models"
 )
 
 // GetSchemas Return slice of all table schema interfaces
 func GetSchemas() []interface{} {
 	var schemas []interface{}
 
-	schemas = append(schemas, models.SubscriptionSchema())
-	schemas = append(schemas, models.BusinessSchema())
-	schemas = append(schemas, models.CategorySchema())
-	schemas = append(schemas, models.VendorSchema())
-	schemas = append(schemas, models.ProductSchema())
-	schemas = append(schemas, models.CollectionSchema())
-	schemas = append(schemas, models.TransactionSchema())
-	schemas = append(schemas, models.PersonnelSchema())
-	schemas = append(schemas, models.CustomerSchema())
-	schemas = append(schemas, models.OrderSchema())
-	schemas = append(schemas, models.OrderProductSchema())
-	schemas = append(schemas, models.OrderCollectionSchema())
-	schemas = append(schemas, models.PaymentSchema())
-	schemas = append(schemas, models.ParameterSchema())
+	schemas = append(schemas, &Subscription{})
+	schemas = append(schemas, &Business{})
+	schemas = append(schemas, &Category{})
+	schemas = append(schemas, &Vendor{})
+	schemas = append(schemas, &Product{})
+	schemas = append(schemas, &Collection{})
+	schemas = append(schemas, &Transaction{})
+	schemas = append(schemas, &Personnel{})
+	schemas = append(schemas, &Customer{})
+	schemas = append(schemas, &Order{})
+	schemas = append(schemas, &OrderProduct{})
+	schemas = append(schemas, &OrderCollection{})
+	schemas = append(schemas, &Payment{})
+	schemas = append(schemas, &Parameter{})
 
 	return schemas
 }
