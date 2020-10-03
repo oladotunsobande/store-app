@@ -1,7 +1,6 @@
 package secrets
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path"
@@ -20,13 +19,10 @@ type Secrets struct {
 }
 
 func init() {
-	//_, b, _, _ := runtime.Caller(0)
-	//BasePath := path.Dir(b)
-	log.Println(path.Join(".env"))
 	if err := godotenv.Load(path.Join(".env")); err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	fmt.Println("Environment variables has been successfully loaded.")
+	log.Println(".env loaded")
 }
 
 // GetSecrets Get all loaded secrets

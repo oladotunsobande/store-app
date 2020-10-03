@@ -2,29 +2,25 @@ package main
 
 import (
 	"log"
-	"store-app/src/services"
+	"net/http"
+	secrets "store-app/src/config"
+	"store-app/src/routes"
+
+	"github.com/urfave/negroni"
 )
 
 func main() {
-	subscription := services.SubscriptionPayloadType{
-		UID: "d6f3d9e7-cdf3-40d4-acf8-ada631a1a402",
-	}
+	n := negroni.Classic()
+	n.UseHandler(routes.RegisterRoutes())
 
-	result, err := subscription.GetSingleSubscription()
+	err := http.ListenAndServe(":"+secrets.GetSecrets().ApplicationPort, n)
 	if err != nil {
 		log.Fatal(err)
-	}
-	/*subscription := services.SubscriptionPayloadType{
-		Name:     "Basic",
-		Price:    2000.00,
-		Duration: 28,
-		IsTrial:  false,
+
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
 	}
 
-	result, err := subscription.CreateNewSubscription()
-	if err != nil {
-		log.Fatal(err)
-	}*/
-
-	log.Println("Subscription: ", result)
+	log.Printf("Store Manager API starting...\nListening on port: %s", secrets.GetSecrets().ApplicationPort)
 }
