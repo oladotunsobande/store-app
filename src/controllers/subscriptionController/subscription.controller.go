@@ -19,7 +19,8 @@ func CreateSubscription(ctx echo.Context) (err error) {
 
 	result, err := subscription.CreateNewSubscription()
 	if err != nil {
-		return ctx.JSON(400, utils.ErrorMessage(err.Error()))
+		return err
+		//return ctx.JSON(400, utils.ErrorMessage(err.Error()))
 	}
 
 	return ctx.JSON(200, utils.SuccessResultWithMessage(result, "Subscription created successfully"))

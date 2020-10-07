@@ -21,6 +21,4 @@ func main() {
 			err = r.(error)
 		}
 	}
-
-	log.Printf("Store Manager API starting...\nListening on port: %s", secrets.GetSecrets().ApplicationPort)
 }

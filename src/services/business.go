@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	database "store-app/src/data"
+	repository "store-app/src/data/repository"
 )
 
 // CreateNewBusiness Add new business account
@@ -28,7 +29,7 @@ func (_payload BusinessPayloadType) CreateNewBusiness() (interface{}, error) {
 		SubscriptionUID: _payload.Subscription,
 	}
 
-	Construct := database.RepositoryConstruct{
+	Construct := repository.DataConstruct{
 		Payload: data,
 	}
 
