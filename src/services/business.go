@@ -7,18 +7,18 @@ import (
 )
 
 // CreateNewBusiness Add new business account
-func (_payload BusinessPayloadType) CreateNewBusiness() (interface{}, error) {
+func (_payload BusinessRequest) CreateNewBusiness() error {
 	// Get subscription
-	record := new(SubscriptionPayloadType)
+	record := new(SubscriptionRequest)
 	record.UID = _payload.Subscription
 
 	result, err := record.GetSingleSubscription()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if result == nil {
-		return nil, errors.New("Subscription record does not exist")
+		return errors.New("Subscription record does not exist")
 	}
 
 	data := &database.Business{
@@ -33,10 +33,10 @@ func (_payload BusinessPayloadType) CreateNewBusiness() (interface{}, error) {
 		Payload: data,
 	}
 
-	response, err := Construct.AddOne()
+	err = Construct.AddOne()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return response, nil
+	return nil
 }

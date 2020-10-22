@@ -9,7 +9,7 @@ import (
 
 // CreateSubscription processes request for the creation of a new subscription
 func CreateSubscription(ctx echo.Context) (err error) {
-	subscription := new(services.SubscriptionPayloadType)
+	subscription := new(services.SubscriptionRequest)
 
 	if err := ctx.Bind(subscription); err != nil {
 		return err

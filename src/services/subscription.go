@@ -8,7 +8,12 @@ import (
 )
 
 // CreateNewSubscription Add new subscription
-func (_payload SubscriptionPayloadType) CreateNewSubscription() (interface{}, error) {
+func (_payload SubscriptionRequest) CreateNewSubscription() (interface{}, error) {
+	err := PayloadValidation(_payload)
+	if err != nil {
+		return nil, err
+	}
+
 	var isTrial uint8 = 0
 
 	if _payload.IsTrial == true {
@@ -27,13 +32,13 @@ func (_payload SubscriptionPayloadType) CreateNewSubscription() (interface{}, er
 		Payload: newSubscription,
 	}
 
-	_, err := Construct.AddOne()
+	err = Construct.AddOne()
 	if err != nil {
 		return nil, err
 	}
 
 	// Get new record
-	record := SubscriptionPayloadType{
+	record := SubscriptionRequest{
 		UID: newSubscription.UID,
 	}
 
@@ -46,7 +51,7 @@ func (_payload SubscriptionPayloadType) CreateNewSubscription() (interface{}, er
 }
 
 // GetSingleSubscription Get single subscription record
-func (_payload SubscriptionPayloadType) GetSingleSubscription() (interface{}, error) {
+func (_payload SubscriptionRequest) GetSingleSubscription() (interface{}, error) {
 	Construct := repository.DataConstruct{
 		Model:      &database.Subscription{},
 		Clause:     "uid = ?",
